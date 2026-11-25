@@ -217,17 +217,17 @@ function draw(){
   const line=view.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
   const grid=[.25,.5,.75].map(p=>`<line x1="0" x2="${W}" y1="${(H*p).toFixed(0)}" y2="${(H*p).toFixed(0)}" stroke="var(--line)"/>`).join('');
   const lbl=[mx/1.05,mn/.92].map(v=>`<text x="${pad}" y="${Y(v)+(v===mx/1.05?-6:14)}" fill="var(--mute)" font-size="12" text-anchor="start">${f(v)}</text>`).join('');
-  s.innerHTML=`${grid}<path d="${line} L${X(n-1)} ${H} L${X(0)} ${H} Z" fill="#D8452E" fill-opacity=".12"/><path d="${line}" stroke="#D8452E" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>${W>520?lbl:''}<line id="hl" y1="0" y2="${H}" stroke="var(--ink)" stroke-opacity=".25" stroke-width="1.5" style="display:none"/><circle id="hc" r="7" fill="#D8452E" stroke="#fff" stroke-width="3" style="display:none"/><circle cx="${X(0)}" cy="${Y(view[n-1])}" r="6" fill="#D8452E" stroke="#fff" stroke-width="3"/>`;
+  s.innerHTML=`${grid}<path d="${line} L${X(n-1)} ${H} L${X(0)} ${H} Z" fill="#D8452E" fill-opacity=".12"/><path d="${line}" stroke="#D8452E" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>${W>520?lbl:''}<line id="hl" y1="0" y2="${H}" stroke="var(--ink)" stroke-opacity=".25" stroke-width="1.5" style="display:none"/><circle id="hc" r="7" fill="#D8452E" stroke="#fff" stroke-width="3" style="display:none"/><circle cx="${X(n-1)}" cy="${Y(view[n-1])}" r="6" fill="#D8452E" stroke="#fff" stroke-width="3"/>`;
   geo={X,Y,n,view};
   $('axStart').textContent='قبل '+f(n-1)+' يوم';show(null);
 }
 function hover(e){
   if(!geo)return;const r=$('chart').getBoundingClientRect(),{X,Y,n,view}=geo;
   const x=e.clientX-r.left;let best=0,bd=1e9;for(let i=0;i<n;i++){const dd=Math.abs(X(i)-x);if(dd<bd){bd=dd;best=i}}
-  const i=n-1-best,hx=X(best),hy=Y(view[i]);
+  const ago=n-1-best,hx=X(best),hy=Y(view[best]);
   const hl=$('hl'),hc=$('hc');hl.setAttribute('x1',hx);hl.setAttribute('x2',hx);hl.style.display='';hc.setAttribute('cx',hx);hc.setAttribute('cy',hy);hc.style.display='';
-  const t=$('tip');t.textContent=f(view[i])+' دينار · '+(best?'قبل '+f(best)+' يوم':'اليوم');t.style.left=Math.min(Math.max(hx,70),r.width-70)+'px';t.style.top=hy+'px';t.style.opacity=1;
-  show(i);
+  const t=$('tip');t.textContent=f(view[best])+' دينار · '+(ago?'قبل '+f(ago)+' يوم':'اليوم');t.style.left=Math.min(Math.max(hx,70),r.width-70)+'px';t.style.top=hy+'px';t.style.opacity=1;
+  show(best);
 }
 function unhover(){if(!geo)return;$('hl').style.display='none';$('hc').style.display='none';$('tip').style.opacity=0;show(null)}
 function calc(){
